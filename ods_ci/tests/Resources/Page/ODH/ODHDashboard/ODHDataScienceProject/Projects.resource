@@ -140,7 +140,8 @@ Delete Data Science Projects From CLI
             Log    msg=There is probably no DS Projects with Diplay Name equal to ${displayed_name}
             Continue For Loop
         ELSE
-            Oc Delete    kind=Project   name=${project_k8s_name}
+            # the project can be deleted in the test case
+            Run And Return Rc    oc delete project ${project_k8s_name} || true
             WHILE    ${TRUE}
                 ${exists} =    Run And Return Rc    oc get project ${project_k8s_name}
                 IF    "${exists}" == "1"    BREAK
