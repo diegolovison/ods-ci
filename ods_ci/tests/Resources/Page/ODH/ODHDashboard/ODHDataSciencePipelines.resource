@@ -12,8 +12,10 @@ Resource            ODHDataScienceProject/Pipelines.resource
 *** Variables ***
 ${DATA_SCIENCE_PIPELINES_APPLICATION_PATH}=    ods_ci/tests/Resources/Files
 ${PIPELINES_IMPORT_BTN_FORM_XP}=    xpath://footer/button[text()="Import pipeline"]
-${PIPELINE_NAME_INPUT_XP}=    id:pipeline-name
-${PIPELINE_DESC_INPUT_XP}=    id:pipeline-description
+${RUN_NAME_INPUT_XP}=    //*[@id="run-name"]
+${RUN_DESC_INPUT_XP}=    //*[@id="run-description"]
+${PIPELINE_NAME_INPUT_XP}=    //*[@id="pipeline-name"]
+${PIPELINE_DESC_INPUT_XP}=    //*[@id="pipeline-description"]
 
 *** Keywords ***
 # robocop: disable:line-too-long
@@ -44,11 +46,11 @@ Fill In Run Creation Form    # robocop: disable
     [Documentation]    Compiles the form to create a pipeline run.
     ...                It works when you start server creation from either
     ...                DS Project details page or DS Pipelines page.
-    [Arguments]    ${name}    ${pipeline_name}=${NONE}    ${from_actions}=${TRUE}    ${run_type}=Immediate
+    [Arguments]    ${name}    ${pipeline_name}=${NONE}    ${run_type}=Immediate
     ...            ${trigger_type}=Periodic    ${start_date}=${NONE}    ${start_time}=${NONE}
     ...            ${end_date}=${NONE}    ${end_time}=${NONE}    ${cron_expr}=${NONE}&{model_param}
-    Input Text    ${PIPELINE_NAME_INPUT_XP}    ${name}
-    Input Text    ${PIPELINE_DESC_INPUT_XP}    ${name}
+    Input Text    ${RUN_NAME_INPUT_XP}    ${name}
+    Input Text    ${RUN_DESC_INPUT_XP}    ${name}
     Run Keyword And Warn On Failure    Element Should Be Disabled    ${GENERIC_CREATE_BTN_XP}
     IF    "${pipeline_name}" != "${NONE}"
         Select Pipeline For The Run    pipeline_name=${pipeline_name}
@@ -69,10 +71,10 @@ Select Pipeline For The Run
     [Documentation]    Selects the given ${pipeline_name} from the pipeline
     ...                dropdown in the Run creation form.
     [Arguments]    ${pipeline_name}
-    Wait Until Page Contains Element    xpath://section[@id="run-section-pipeline"]//span[@class="pf-v5-c-dropdown__toggle-text"]/..
-    Click Element    xpath://section[@id="run-section-pipeline"]//span[@class="pf-v5-c-dropdown__toggle-text"]/..
-    Wait Until Page Contains Element    xpath://ul/li/a[text()="${pipeline_name}"]
-    Click Element     xpath://ul/li/a[text()="${pipeline_name}"]
+    Wait Until Page Contains Element    xpath://*[@id="run-section-pipeline"]
+    Click Element    xpath://*[@id="run-section-pipeline"]
+    Wait Until Page Contains Element    xpath://td[text()="${pipeline_name}"]
+    Click Element     xpath://td[text()="${pipeline_name}"]
 
 Get Workflow Name From Topology Page
     [Documentation]    Returns the workflow name corresponding to the displayed pipeline.
